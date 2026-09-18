@@ -72,3 +72,34 @@ az functionapp config appsettings list -g <rg> -n <function-app> --query "[?name
 
 NCRONTAB format is `{second} {minute} {hour} {day} {month} {day-of-week}` - note the
 leading seconds field, which trips people up coming from standard cron.
+
+## Host reports "Unable to access AzureWebJobsStorage" / timer never fires
+
+If Application Insights shows repeated `The listener for function 'Functions.TimerSyncFunction'
+was unable to start` / `AuthorizationFailure` errors, and
+`az storage account show --query publicNetworkAccess` returns `Disabled`, your
+organization's Azure Policy blocks public network access to Storage accounts entirely
+(common in enterprise tenants). A Consumption-plan Function App reaches its storage
+account over the public endpoint, so this will always fail regardless of RBAC role
+assignments. Options:
+
+- Ask your platform team for a policy exemption on this specific storage account, or
+- Move to an Elastic Premium/App Service plan with regional VNet integration plus a
+  Private Endpoint (and matching Private DNS Zone) for the storage account's blob, queue,
+  and table sub-resources.
+
+This is an environment/policy constraint, not a defect in this tool - `/api/status`
+(anonymous, no storage dependency) will still respond normally even while this is broken,
+which is a useful first signal to distinguish "app didn't deploy" from "app deployed but
+can't reach storage".
+
+## Function key retrieval fails with "InternalServerError from host runtime"
+
+If `az functionapp function keys list` (or the portal's "Get function URL") fails, but the
+function otherwise responds to HTTP calls, the Functions host's secret repository (which
+normally lives in a blob container named `azure-webjobs-secrets`) may be unable to reach
+storage - the same public-network-access restriction above also blocks this. Setting the
+app setting `AzureWebJobsSecretStorageType=files` switches key storage to local disk as a
+workaround; note this means keys are regenerated if the instance is recycled/scaled out, so
+treat it as a diagnostic workaround rather than a production configuration.
+
