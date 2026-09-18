@@ -93,17 +93,14 @@ resource plan 'Microsoft.Web/serverfarms@2023-12-01' = {
     name: 'Y1'
     tier: 'Dynamic'
   }
-  kind: 'functionapp,linux'
-  properties: {
-    reserved: true
-  }
+  kind: 'functionapp'
 }
 
 resource functionApp 'Microsoft.Web/sites@2023-12-01' = {
   name: functionAppName
   location: location
   tags: union(tags, { 'azd-service-name': 'sync' })
-  kind: 'functionapp,linux'
+  kind: 'functionapp'
   identity: {
     type: 'SystemAssigned'
   }
@@ -111,9 +108,10 @@ resource functionApp 'Microsoft.Web/sites@2023-12-01' = {
     serverFarmId: plan.id
     httpsOnly: true
     siteConfig: {
-      linuxFxVersion: 'DOTNET-ISOLATED|8.0'
       ftpsState: 'Disabled'
       minTlsVersion: '1.2'
+      netFrameworkVersion: 'v8.0'
+      use32BitWorkerProcess: false
       appSettings: [
         { name: 'FUNCTIONS_EXTENSION_VERSION', value: '~4' }
         { name: 'FUNCTIONS_WORKER_RUNTIME', value: 'dotnet-isolated' }

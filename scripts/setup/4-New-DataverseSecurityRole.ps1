@@ -59,34 +59,51 @@ $headers = @{
 }
 $base = "$($DataverseEnvironmentUrl.TrimEnd('/'))/api/data/v9.2"
 
-$rootBu = Invoke-RestMethod -Uri "$base/businessunits?`$filter=_parentbusinessunitid_value eq null&`$select=businessunitid" -Headers $headers
+# Dataverse automatically clones any role you create at the root business unit down to every
+# child business unit - $top=1 just keeps this lookup deterministic when several business
+# units happen to satisfy the "no parent" filter.
+$rootBu = Invoke-RestMethod -Uri "$base/businessunits?`$filter=_parentbusinessunitid_value eq null&`$select=businessunitid&`$top=1" -Headers $headers
 $rootBuId = $rootBu.value[0].businessunitid
 
-$roleBody = @{
-    name                          = $RoleName
-    "businessunitid@odata.bind"   = "/businessunits($rootBuId)"
-} | ConvertTo-Json
+$existingRole = Invoke-RestMethod -Uri "$base/roles?`$filter=name eq '$RoleName' and _businessunitid_value eq $rootBuId&`$select=roleid" -Headers $headers
+if ($existingRole.value.Count -gt 0) {
+    $roleId = $existingRole.value[0].roleid
+    Write-Host "Role '$RoleName' already exists ($roleId) - reusing it." -ForegroundColor Yellow
+}
+else {
+    $roleBody = @{
+        name                        = $RoleName
+        "businessunitid@odata.bind" = "/businessunits($rootBuId)"
+    } | ConvertTo-Json
 
-$roleResponse = Invoke-WebRequest -Uri "$base/roles" -Headers $headers -Method Post -Body $roleBody
-$roleId = [regex]::Match($roleResponse.Headers.'OData-EntityId', '\(([0-9a-fA-F-]+)\)').Groups[1].Value
+    $roleResponse = Invoke-WebRequest -Uri "$base/roles" -Headers $headers -Method Post -Body $roleBody
+    $roleId = [regex]::Match($roleResponse.Headers.'OData-EntityId', '\(([0-9a-fA-F-]+)\)').Groups[1].Value
 
-Write-Host "Created role '$RoleName' ($roleId)." -ForegroundColor Green
+    Write-Host "Created role '$RoleName' ($roleId)." -ForegroundColor Green
+}
+
+# The systemuser table's read privilege kept its pre-Dataverse-rename name, "prvReadUser",
+# instead of following the usual "prvRead<logicalname>" convention every other table uses.
+function Get-ReadPrivilegeName([string]$table) {
+    if ($table -eq "systemuser") { return "prvReadUser" }
+    return "prvRead$table"
+}
 
 $privileges = @()
 foreach ($table in $tablesNeeded) {
-    $privName = "prvRead$table"
+    $privName = Get-ReadPrivilegeName $table
     $priv = Invoke-RestMethod -Uri "$base/privileges?`$filter=name eq '$privName'&`$select=privilegeid,name" -Headers $headers
     if ($priv.value.Count -eq 0) {
         Write-Warning "Could not find privilege '$privName' - skipping. You may need to grant read access to '$table' manually."
         continue
     }
 
-    $privileges += @{ PrivilegeId = $priv.value[0].privilegeid; Depth = 4 } # 4 = Global/Organization
+    $privileges += @{ PrivilegeId = $priv.value[0].privilegeid; Depth = "Global" } # Global = organization-wide read
 }
 
 $addPrivilegesBody = @{ Privileges = $privileges } | ConvertTo-Json -Depth 5
 
-Invoke-RestMethod -Uri "$base/roles($roleId)/Microsoft.Dynamics.CRM.AddPrivileges" -Headers $headers -Method Post -Body $addPrivilegesBody | Out-Null
+Invoke-RestMethod -Uri "$base/roles($roleId)/Microsoft.Dynamics.CRM.AddPrivilegesRole" -Headers $headers -Method Post -Body $addPrivilegesBody | Out-Null
 
 Write-Host "Granted organization-wide read privileges on: $($tablesNeeded -join ', ')" -ForegroundColor Green
 Write-Host ""
