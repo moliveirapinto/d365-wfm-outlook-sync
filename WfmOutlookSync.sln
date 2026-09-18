@@ -1,0 +1,36 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{88618C16-EDE2-4F2D-9A71-925A61B776F8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WfmOutlookSync", "src\WfmOutlookSync\WfmOutlookSync.csproj", "{2FB646B3-76AE-4829-A0DD-AF34D4D8D4D4}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{830A892C-813C-400E-A79F-B696C5808DEC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WfmOutlookSync.Tests", "tests\WfmOutlookSync.Tests\WfmOutlookSync.Tests.csproj", "{35C9C52E-564B-4BB6-8B29-45584266178D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2FB646B3-76AE-4829-A0DD-AF34D4D8D4D4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2FB646B3-76AE-4829-A0DD-AF34D4D8D4D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2FB646B3-76AE-4829-A0DD-AF34D4D8D4D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2FB646B3-76AE-4829-A0DD-AF34D4D8D4D4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{35C9C52E-564B-4BB6-8B29-45584266178D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{35C9C52E-564B-4BB6-8B29-45584266178D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{35C9C52E-564B-4BB6-8B29-45584266178D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{35C9C52E-564B-4BB6-8B29-45584266178D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{2FB646B3-76AE-4829-A0DD-AF34D4D8D4D4} = {88618C16-EDE2-4F2D-9A71-925A61B776F8}
+		{35C9C52E-564B-4BB6-8B29-45584266178D} = {830A892C-813C-400E-A79F-B696C5808DEC}
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,9 @@
+# Azure Developer CLI project file - https://aka.ms/azd
+name: d365-wfm-outlook-sync
+metadata:
+  template: d365-wfm-outlook-sync@0.1.0
+services:
+  sync:
+    project: ./src/WfmOutlookSync
+    language: dotnet
+    host: function

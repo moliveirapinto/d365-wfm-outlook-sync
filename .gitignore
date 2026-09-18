@@ -1,0 +1,38 @@
+## .NET
+bin/
+obj/
+*.user
+*.suo
+.vs/
+
+## Azure Functions
+local.settings.json
+bin
+obj
+appsettings.json
+appsettings.*.json
+!appsettings.sample.json
+
+## Azure Developer CLI
+.azure/
+
+## Bicep
+*.bicep.json
+
+## Test results
+TestResults/
+*.trx
+coverage/
+*.coverage
+*.coveragexml
+
+## OS / editor
+.DS_Store
+Thumbs.db
+*.log
+
+## Secrets - never commit
+*.pfx
+*.pem
+*secrets*.json
+!*.sample.json

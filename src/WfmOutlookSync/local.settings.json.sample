@@ -1,0 +1,44 @@
+{
+  "IsEncrypted": false,
+  "Values": {
+    "AzureWebJobsStorage": "UseDevelopmentStorage=true",
+    "FUNCTIONS_WORKER_RUNTIME": "dotnet-isolated",
+
+    "// --- Dataverse connection (required) ---": "",
+    "Dataverse__EnvironmentUrl": "https://yourorg.crm.dynamics.com",
+    "Dataverse__AuthMode": "ManagedIdentity",
+    "Dataverse__TenantId": "",
+    "Dataverse__ClientId": "",
+    "Dataverse__ClientSecret": "",
+    "Dataverse__UserAssignedManagedIdentityClientId": "",
+
+    "// --- Microsoft Graph / Outlook connection (required) ---": "",
+    "Graph__AuthMode": "ManagedIdentity",
+    "Graph__TenantId": "",
+    "Graph__ClientId": "",
+    "Graph__ClientSecret": "",
+    "Graph__UserAssignedManagedIdentityClientId": "",
+
+    "// --- Sync behavior (all optional, shown with defaults) ---": "",
+    "Sync__LookBehindDays": "1",
+    "Sync__LookAheadDays": "30",
+    "Sync__PublishedBookingStatusNames": "Committed,Scheduled",
+    "Sync__ExcludedShiftActivityTypeNames": "",
+    "Sync__EventSubjectTemplate": "{ShiftActivityType} \u2014 {ShiftPlanName}",
+    "Sync__EventCategory": "WFM Shift",
+    "Sync__ShowAs": "busy",
+    "Sync__SetReminder": "false",
+    "Sync__ReminderMinutesBeforeStart": "15",
+    "Sync__DeleteWhenCanceled": "true",
+    "Sync__DryRun": "false",
+    "Sync__ExtendedPropertyNamespace": "WfmOutlookSync",
+    "Sync__MaxDegreeOfParallelism": "4",
+
+    "// --- Timer trigger schedule (NCRONTAB): sec min hour day month day-of-week ---": "",
+    "SYNC_CRON_SCHEDULE": "0 */5 * * * *",
+
+    "// --- Sync state storage (defaults to AzureWebJobsStorage account) ---": "",
+    "SyncState__TableName": "wfmSyncState",
+    "SyncState__StorageAccountUri": ""
+  }
+}

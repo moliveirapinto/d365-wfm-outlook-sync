@@ -1,0 +1,63 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "resourceGroupName": {
+      "value": "${AZURE_RESOURCE_GROUP=rg-${AZURE_ENV_NAME}}"
+    },
+    "location": {
+      "value": "${AZURE_LOCATION}"
+    },
+    "resourceToken": {
+      "value": "${AZURE_ENV_NAME}"
+    },
+    "dataverseEnvironmentUrl": {
+      "value": "${DATAVERSE_ENVIRONMENT_URL}"
+    },
+    "dataverseAuthMode": {
+      "value": "${DATAVERSE_AUTH_MODE=ManagedIdentity}"
+    },
+    "graphAuthMode": {
+      "value": "${GRAPH_AUTH_MODE=ManagedIdentity}"
+    },
+    "tenantId": {
+      "value": "${AUTH_TENANT_ID}"
+    },
+    "dataverseClientId": {
+      "value": "${DATAVERSE_CLIENT_ID}"
+    },
+    "dataverseClientSecret": {
+      "value": "${DATAVERSE_CLIENT_SECRET}"
+    },
+    "graphClientId": {
+      "value": "${GRAPH_CLIENT_ID}"
+    },
+    "graphClientSecret": {
+      "value": "${GRAPH_CLIENT_SECRET}"
+    },
+    "syncCronSchedule": {
+      "value": "${SYNC_CRON_SCHEDULE=0 */5 * * * *}"
+    },
+    "lookBehindDays": {
+      "value": "${SYNC_LOOK_BEHIND_DAYS=1}"
+    },
+    "lookAheadDays": {
+      "value": "${SYNC_LOOK_AHEAD_DAYS=30}"
+    },
+    "excludedShiftActivityTypeNames": {
+      "value": "${SYNC_EXCLUDED_SHIFT_ACTIVITY_TYPE_NAMES}"
+    },
+    "publishedBookingStatusNames": {
+      "value": "${SYNC_PUBLISHED_BOOKING_STATUS_NAMES=Committed,Scheduled}"
+    },
+    "eventSubjectTemplate": {
+      "value": "${SYNC_EVENT_SUBJECT_TEMPLATE={ShiftActivityType} - {ShiftPlanName}}"
+    },
+    "eventCategory": {
+      "value": "${SYNC_EVENT_CATEGORY=WFM Shift}"
+    },
+    "dryRun": {
+      "value": "${SYNC_DRY_RUN=false}"
+    }
+  }
+}
